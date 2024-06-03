@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import askquestion
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import random
+import time 
 
 window = tk.Tk()
 window.geometry("300x200")
@@ -84,16 +87,20 @@ class ExamModel:
 
 
 class ExamView:
+    def __init__(self):
+        self.jawaban=[0,0,0,0,0]
+        self.total=0
+        self.submit_button = tk.Button(button_frame, text="submit", command=self.kalkulasi,font=("Arial", 10))
+        self.next_button = tk.Button(button_frame, text="Next", command=lambda: self.show_slide(self.current_slide + 1),font=("Arial", 10))
+        self.previous_button = tk.Button(button_frame, text="Previous", command=lambda: self.show_slide(self.current_slide - 1),font=("Arial", 10))
+        
     def login():
         pass
     def mulai_ujian(self, user):
         self.current_slide = 1
         self.user= user
-        self.submit_button = tk.Button(button_frame, text="submit", command=self.kalkulasi,font=("Arial", 10))
         self.submit_button.pack_forget()
-        self.next_button = tk.Button(button_frame, text="Next", command=lambda: self.show_slide(self.current_slide + 1),font=("Arial", 10))
         self.next_button.pack(side="right", padx=25, pady=10)
-        self.previous_button = tk.Button(button_frame, text="Previous", command=lambda: self.show_slide(self.current_slide - 1),font=("Arial", 10))
         self.previous_button.pack_forget()
         buttons = [
             ("soal 1", 1),
@@ -105,21 +112,20 @@ class ExamView:
         for text, slide_number in buttons:
             btn = tk.Button(navigation_frame, text=text, command=lambda sn=slide_number: self.show_slide(sn), font=("Arial", 10))
             btn.pack(side="left", padx=10, pady=10)
-        # window.after(5000, window.destroy)
+        window.after(60000, window.destroy)
         window.mainloop()
         self.jawaban = [self.user.jawaban1.get(), self.user.jawaban2.get(), self.user.jawaban3.get(), self.user.jawaban4.get(), self.user.jawaban5.get()]
 
     def kalkulasi(self):
-        response = askquestion("Reminder", "Apakah Anda yakin?")
-        if response == "yes":
-            total = 0
+        respon = askquestion("Reminder", "Apakah Anda yakin?")
+        if respon == "yes":
             for i in self.jawaban:
                 try:
-                    total += int(i)
+                    self.total += int(i)
                 except:
                     pass
+            time.sleep(2)
             window.destroy()
-            print(total)
         else:
             pass
 
@@ -140,11 +146,74 @@ class ExamView:
         elif self.current_slide != 5:
             self.submit_button.pack_forget()
 
+    def diagram(self):
+        kategori = ['Benar', 'Salah', 'Tidak Dijawab']
+        persebaran=[0,0,0]
+
+        for i in self.jawaban:
+            if i == '20':
+                persebaran[0]+=1
+            elif i == 'none':
+                persebaran[2]+=1
+            else:
+                persebaran[1]+=1
+
+    # Membuat objek diagram
+        fig = Figure(figsize=(5, 4), dpi=100)
+        plot = fig.add_subplot(111)
+
+        # Menambahkan data ke diagram
+        plot.bar(kategori, persebaran, color=['green', 'red', 'gray'], width=0.3)
+
+        plot.set_title('Persebaran Jawaban')
+        plot.set_xlabel('Kategori')
+        plot.set_ylabel('Jumlah')
+
+        # Mengatur skala sumbu y agar menampilkan nilai bilangan bulat dari 1 sampai 5
+        plot.set_yticks(range(1, 6))
+
+        hasil = tk.Tk()
+        hasil.title("Diagram Jawaban")
+        hasil.configure(bg='white')
+        hasil.attributes("-fullscreen", True)
+
+        pemberitahuan= ''
+        latar_belakang=''
+        if self.total>=70:
+            pemberitahuan='SELAMAT ANDA LULUS DALAM TES INI'
+            latar_belakang='blue'
+        else:
+            pemberitahuan='MAAF ANDA BELUM LULUS DALAM TES INI'
+            latar_belakang='red'
+
+        label1 = tk.Label(hasil, text=pemberitahuan,font=("Arial", 27))
+        label1.configure(bg=latar_belakang)
+        label1.pack(padx=20, pady=5)
+        label2 = tk.Label(hasil, text=f"Nilai anda: {self.total}\nKKM: 70",font=("Arial", 24))
+        label2.pack(padx=20, pady=5)
+
+        # Mengonversi diagram menjadi format yang dapat ditampilkan di tkinter
+        canvas = FigureCanvasTkAgg(fig, master=hasil)
+        canvas.draw()
+
+        # Menampilkan diagram di jendela tkinter
+        canvas.get_tk_widget().pack(anchor='center')
+
+        frame_penutup = tk.Frame(hasil)
+        frame_penutup.pack(side="bottom", fill="x")
+
+        penutup = tk.Label(frame_penutup, text='Sesi berikutnya akan dimulai beberapa saat lagi',font=("Arial", 20),anchor='s')
+        penutup.pack(padx=20, pady=5)
+
+        window.mainloop()
+
+
 class ExamController:
     def __init__(self, view, model):
         self.model = model
         self.view = view
         self.view.mulai_ujian(self.model)
+        self.view.diagram()
 
 model = ExamModel()
 view = ExamView()
