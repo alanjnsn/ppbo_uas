@@ -286,10 +286,8 @@ class ExamView:
     def kalkulasi1(self):
         respon = messagebox.askquestion("Reminder", "Masuk ke sesi selanjutnya?")
         if respon == "yes":
-            self.user.window.after_cancel(self.timer1)
             time.sleep(2)
-            self.user.laman_mtk.pack_forget()
-            self.b_indo(self.user)
+            self.sisa_waktu=0
         else:
             pass
 
@@ -352,9 +350,8 @@ class ExamView:
     def kalkulasi2(self):
         respon = messagebox.askquestion("Reminder", "Akhiri Ujian?")
         if respon == "yes":
-            self.user.window.after_cancel(self.timer2)
             time.sleep(2)
-            self.user.window.destroy()
+            self.sisa_waktu=0
         else:
             pass
 
@@ -477,4 +474,3 @@ model1 = ExamModel()
 view1 = ExamView()
 controller1 = ExamController(view1, model1)
 diagram= Diagram(view1)
-
