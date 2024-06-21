@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import *
+from PIL import ImageTk, Image
 from tkinter import ttk
 from tkinter import messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -13,45 +15,136 @@ class Database:
 
     def login(self):
         self.laman_login = tk.Tk()
-        self.laman_login.title("Laman Login")
-        self.laman_login.attributes('-fullscreen',True)
-        self.laman_login.configure(background='white')
+        self.laman_login.geometry('1166x718')
+        self.laman_login.resizable(0, 0)
+        self.laman_login.state('zoomed')
+        self.laman_login.title('Login Page') # DONE
 
-        self.NIK = tk.StringVar()
-        self.PASSWORD = tk.StringVar()
-               
-        self.input_frame = ttk.Frame(self.laman_login)
-        self.input_frame.pack(padx=10,pady=10,fill="x")
+        # ========================================================================
+        # ============================background image============================
+        # ========================================================================
+        self.bg_frame = Image.open('images\\background1.png')
+        photo = ImageTk.PhotoImage(self.bg_frame)
+        self.bg_panel = Label(self.laman_login, image=photo)
+        self.bg_panel.image = photo
+        self.bg_panel.pack(fill='both', expand='yes')
+        # ====== Login Frame =========================
+        self.lgn_frame = Frame(self.laman_login, bg='#040405', width=950, height=600)
+        self.lgn_frame.place(x=200, y=70)
 
-        self.keterangan_frame = ttk.Frame(self.laman_login)
-        self.keterangan_frame.pack(side='bottom',padx=10,pady=10,fill="x")
+        # ========================================================================
+        # ========================================================
+        # ========================================================================
+        self.txt = "WELCOME"
+        self.heading = Label(self.lgn_frame, text=self.txt, font=('yu gothic ui', 25, "bold"), bg="#040405",
+                             fg='white',
+                             bd=5,
+                             relief=FLAT)
+        self.heading.place(x=80, y=30, width=300, height=30)
 
-        self.judul = ttk.Label(self.input_frame,text="SELAMAT DATANG PESERTA UTBK",font=("Helvetica", 16))
-        self.judul.pack(anchor='center', pady=20)
+        # ========================================================================
+        # ============ Left Side Image ================================================
+        # ========================================================================
+        self.side_image = Image.open('images\\vector.png')
+        photo = ImageTk.PhotoImage(self.side_image)
+        self.side_image_label = Label(self.lgn_frame, image=photo, bg='#040405')
+        self.side_image_label.image = photo
+        self.side_image_label.place(x=5, y=100)
 
-        self.nik_label = ttk.Label(self.input_frame,text="NIK:",font=("Helvetica", 12))
-        self.nik_label.pack(padx=10,expand=True)
-        self.nik_entry = ttk.Entry(self.input_frame,textvariable=self.NIK,font=("Helvetica", 12))
-        self.nik_entry.pack(padx=10,expand=True)
+        # ========================================================================
+        # ============ Sign In Image =============================================
+        # ========================================================================
+        self.sign_in_image = Image.open('images\\hyy.png')
+        photo = ImageTk.PhotoImage(self.sign_in_image)
+        self.sign_in_image_label = Label(self.lgn_frame, image=photo, bg='#040405')
+        self.sign_in_image_label.image = photo
+        self.sign_in_image_label.place(x=620, y=130)
 
-        self.password_label = ttk.Label(self.input_frame,text="Password:",font=("Helvetica", 12))
-        self.password_label.pack(padx=10,expand=True)
-        self.password_entry = ttk.Entry(self.input_frame,textvariable=self.PASSWORD,font=("Helvetica", 12))
-        self.password_entry.pack(padx=10,expand=True)
+        # ========================================================================
+        # ============ Sign In label =============================================
+        # ========================================================================
+        self.sign_in_label = Label(self.lgn_frame, text="Sign In", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 17, "bold"))
+        self.sign_in_label.place(x=650, y=240)
 
-        self.tombol_login = ttk.Button(self.input_frame,text="Login!",command=self.tombol_click)
-        self.tombol_login.pack(side='bottom',padx=10,pady=10)
+        # ========================================================================
+        # ============================username====================================
+        # ========================================================================
+        self.nik_label = Label(self.lgn_frame, text="Username", bg="#040405", fg="#4f4e4d",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.nik_label.place(x=550, y=300)
 
-        teks = ttk.Label(self.keterangan_frame,text=f'''\tImplementasi sederhana Gambaran\n
-            Aplikasi Ujian SNBT berbasis GUI dan MVC\n\n        
-            \t\tKelompok 5:\n        
-            \t\t    Alan\n        
-            \t\t    Nazril\n        
-            \t\t    Kayla\n        
-            \t\t    Marsa''',font=("Helvetica", 14))
-        teks.pack(anchor='center',pady=20)
+        self.nik_entry = Entry(self.lgn_frame, highlightthickness=0, relief=FLAT, bg="#040405", fg="#6b6a69",
+                                    font=("yu gothic ui ", 12, "bold"), insertbackground = '#6b6a69')
+        self.nik_entry.place(x=580, y=335, width=270)
+
+        self.nik_line = Canvas(self.lgn_frame, width=300, height=2.0, bg="#bdb9b1", highlightthickness=0)
+        self.nik_line.place(x=550, y=359)
+        # ===== Username icon =========
+        self.nik_icon = Image.open('images\\username_icon.png')
+        photo = ImageTk.PhotoImage(self.nik_icon)
+        self.nik_icon_label = Label(self.lgn_frame, image=photo, bg='#040405')
+        self.nik_icon_label.image = photo
+        self.nik_icon_label.place(x=550, y=332)
+
+        # ========================================================================
+        # ============================login button================================
+        # ========================================================================
+        self.lgn_button = Image.open('images\\btn1.png')
+        photo = ImageTk.PhotoImage(self.lgn_button)
+        self.lgn_button_label = Label(self.lgn_frame, image=photo, bg='#040405')
+        self.lgn_button_label.image = photo
+        self.lgn_button_label.place(x=550, y=450)
+        self.login_button = Button(self.lgn_button_label, text='LOGIN', font=("yu gothic ui", 13, "bold"), width=25, bd=0,
+                            bg='#3047ff', cursor='hand2', activebackground='#3047ff', fg='white',command=self.tombol_click)
+        self.login_button.place(x=20, y=10)
+
+        # ========================================================================
+        # ============================password====================================
+        # ========================================================================
+        self.password_label = Label(self.lgn_frame, text="Password", bg="#040405", fg="#4f4e4d",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.password_label.place(x=550, y=380)
+
+        self.password_entry = Entry(self.lgn_frame, highlightthickness=0, relief=FLAT, bg="#040405", fg="#6b6a69",
+                                    font=("yu gothic ui", 12, "bold"), show="*", insertbackground = '#6b6a69')
+        self.password_entry.place(x=580, y=416, width=244)
+
+        self.password_line = Canvas(self.lgn_frame, width=300, height=2.0, bg="#bdb9b1", highlightthickness=0)
+        self.password_line.place(x=550, y=440)
+        # ======== Password icon ================
+        self.password_icon = Image.open('images\\password_icon.png')
+        photo = ImageTk.PhotoImage(self.password_icon)
+        self.password_icon_label = Label(self.lgn_frame, image=photo, bg='#040405')
+        self.password_icon_label.image = photo
+        self.password_icon_label.place(x=550, y=414)
+        # ========= show/hide password ==================================================================
+        self.show_image = ImageTk.PhotoImage \
+            (file='images\\show.png')
+
+        self.hide_image = ImageTk.PhotoImage \
+            (file='images\\hide.png')
+
+        self.show_button = Button(self.lgn_frame, image=self.show_image, command=self.show, relief=FLAT,
+                                  activebackground="white"
+                                  , borderwidth=0, background="white", cursor="hand2")
+        self.show_button.place(x=860, y=420)
 
         self.laman_login.mainloop()
+
+    def show(self):
+        self.hide_button = Button(self.lgn_frame, image=self.hide_image, command=self.hide, relief=FLAT,
+                                  activebackground="white"
+                                  , borderwidth=0, background="white", cursor="hand2")
+        self.hide_button.place(x=860, y=420)
+        self.password_entry.config(show='')
+
+    def hide(self):
+        self.show_button = Button(self.lgn_frame, image=self.show_image, command=self.show, relief=FLAT,
+                                  activebackground="white"
+                                  , borderwidth=0, background="white", cursor="hand2")
+        self.show_button.place(x=860, y=420)
+        self.password_entry.config(show='*')
 
     def tombol_click(self):
             user_nik = self.nik_entry.get().lower()
@@ -74,6 +167,7 @@ class Database:
                 self.nik_entry.delete(0, tk.END)
                 self.password_entry.delete(0, tk.END)
 
+    
     def nilai_ujian(self,ujian):
         self.ujian= ujian          
         self.hasil = tk.Tk()
@@ -108,6 +202,7 @@ class Database:
             else:
                 self.persebaran_mtk[1] += 1
 
+
         self.persebaran_bi = [0, 0, 0]
 
         for i in self.ujian.jawaban_bi:
@@ -124,6 +219,7 @@ class Database:
         warna = ['green', 'red', 'gray']
         chart(ax1, self.persebaran_mtk, kategori, warna, 'Persebaran Jawaban matematika')
         chart(ax2, self.persebaran_bi, kategori, warna, 'Persebaran Jawaban bahasa indonesia')
+
 
         pemberitahuan = ''
         latar_belakang = ''
@@ -152,6 +248,7 @@ class Database:
         self.finish_button = tk.Button(self.frame_penutup, text="OK", command=lambda:[self.hasil.quit(),self.hasil.destroy()], font=("Arial", 10))
         self.finish_button.pack(side="right", padx=25, pady=10)
         self.hasil.update_idletasks()
+        
         self.hasil.mainloop()
 
 
@@ -394,6 +491,7 @@ class ExamView:
             self.next_button.pack(side="right", padx=25, pady=10)
             self.previous_button.pack(side="left", padx=25, pady=10)
 
+
     def b_indo(self,user):
         self.sisa_waktu = 60
         self.user=user
@@ -458,6 +556,7 @@ class ExamView:
         else:
             self.next_button.pack(side="right", padx=25, pady=10)
             self.previous_button.pack(side="left", padx=25, pady=10)
+    
 
 
 class ExamController:
@@ -476,7 +575,6 @@ model1 = ExamModel()
 view1 = ExamView()
 controller1 = ExamController(view1, model1)
 database.nilai_ujian(controller1.view)
-
 # sesi 2
 database.login()
 model2 = ExamModel()
